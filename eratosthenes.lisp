@@ -9,3 +9,16 @@
       (do* ((i (* p p) (+ i p)))
         ((> i (length sieve)))
         (setf (bit sieve (1- i)) 1)))))
+
+(defmacro timeit (&body body)
+  (let ((start-time (gensym)) (stop-time (gensym)) (retval (gensym)))
+    `(let ((,start-time (get-internal-run-time))
+           (,retval ,@body)
+           (,stop-time (get-internal-run-time)))
+       (terpri)
+       (format t "Time spent in expression: (seconds) ~f"
+               (/ (- ,stop-time ,start-time)
+                  internal-time-units-per-second))
+       ,retval)))
+
+(timeit (eratosthenes-sieve 100000000))
