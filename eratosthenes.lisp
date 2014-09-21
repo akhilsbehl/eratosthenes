@@ -19,6 +19,7 @@
        (format t "Time spent in expression: (seconds) ~f"
                (/ (- ,stop-time ,start-time)
                   internal-time-units-per-second))
+       (terpri)
        ,retval)))
 
 (timeit (eratosthenes-sieve 100000000))

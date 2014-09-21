@@ -1,0 +1,16 @@
+function primesupto(n)
+  sieve = repeat([true], inner=[n])
+  sieve[1] = false
+  for i in 2:isqrt(n)
+    if sieve[i]
+      sieve[2i:i:end] = false
+    end
+  end
+  retval = Int64[]
+  for i in 1:n
+    if sieve[i]
+      Base.push!(retval, i)
+    end
+  end
+  return(retval)
+end
