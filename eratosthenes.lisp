@@ -24,5 +24,5 @@
                #\linefeed)
        ,retval)))
 
-;(eratosthenes-sieve (parse-integer (cadr *posix-argv*)))
-(timeit *error-output* (eratosthenes-sieve 1000000))
+(timeit *error-output*
+        (eratosthenes-sieve (parse-integer (cadr *posix-argv*))))

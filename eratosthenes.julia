@@ -18,7 +18,5 @@ function eratosthenes_sieve(n, stream=STDIN)
   end
 end
 
-#n = int(ARGS[1])
-#eratosthenes_sieve(n)
-
-@time eratosthenes_sieve(1000000, STDERR)
+n = int(ARGS[1])
+@time eratosthenes_sieve(n, STDERR)
