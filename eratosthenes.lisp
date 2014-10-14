@@ -1,3 +1,5 @@
+#!/usr/bin/sbcl --script
+
 (defun eratosthenes-sieve (n)
   (declare (type unsigned-byte n))
   (let ((sieve (make-array n :element-type 'bit)))
@@ -5,21 +7,11 @@
     (do* ((p 2 next-p)
           (next-p 3 (do ((i p (1+ i))) ((eq 0 (bit sieve i)) (1+ i)))))
       ((> p (sqrt n))
-       (loop for i from 0 to (1- n) when (eq 0 (bit sieve i)) collect (1+ i)))
+       (loop for i from 0 to (1- n)
+             when (eq 0 (bit sieve i))
+             do (print (1+ i))))
       (do* ((i (* p p) (+ i p)))
         ((> i (length sieve)))
         (setf (bit sieve (1- i)) 1)))))
 
-(defmacro timeit (&body body)
-  (let ((start-time (gensym)) (stop-time (gensym)) (retval (gensym)))
-    `(let ((,start-time (get-internal-run-time))
-           (,retval ,@body)
-           (,stop-time (get-internal-run-time)))
-       (terpri)
-       (format t "Time spent in expression: (seconds) ~f"
-               (/ (- ,stop-time ,start-time)
-                  internal-time-units-per-second))
-       (terpri)
-       ,retval)))
-
-(timeit (eratosthenes-sieve 100000000))
+(eratosthenes-sieve (parse-integer (cadr *posix-argv*)))

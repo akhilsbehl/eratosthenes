@@ -1,16 +1,22 @@
-function primesupto(n)
-  sieve = repeat([true], inner=[n])
-  sieve[1] = false
-  for i in 2:isqrt(n)
-    if sieve[i]
-      sieve[2i:i:end] = false
+#!/usr/bin/julia
+
+function eratosthenes_sieve(n)
+  sieve = falses(n)
+  sieve[1] = 1
+  for p in 2:isqrt(n)
+    if sieve[p]
+      continue
+    end
+    for i in (p * p):p:n
+      sieve[i] = 1
     end
   end
-  retval = Int64[]
   for i in 1:n
-    if sieve[i]
-      Base.push!(retval, i)
+    if ~sieve[i]
+      println(i)
     end
   end
-  return(retval)
 end
+
+n = int(ARGS[1])
+eratosthenes_sieve(n)
