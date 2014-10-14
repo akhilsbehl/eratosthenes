@@ -1,6 +1,6 @@
 #!/usr/bin/julia
 
-function eratosthenes_sieve(n)
+function eratosthenes_sieve(n, stream=STDIN)
   sieve = falses(n)
   sieve[1] = 1
   for p in 2:isqrt(n)
@@ -13,10 +13,12 @@ function eratosthenes_sieve(n)
   end
   for i in 1:n
     if ~sieve[i]
-      println(i)
+      println(stream, i)
     end
   end
 end
 
-n = int(ARGS[1])
-eratosthenes_sieve(n)
+#n = int(ARGS[1])
+#eratosthenes_sieve(n)
+
+@time eratosthenes_sieve(1000000, STDERR)

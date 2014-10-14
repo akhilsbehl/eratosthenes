@@ -14,4 +14,15 @@
         ((> i (length sieve)))
         (setf (bit sieve (1- i)) 1)))))
 
-(eratosthenes-sieve (parse-integer (cadr *posix-argv*)))
+(defmacro timeit (&optional (out-stream *standard-output*) &body body)
+  (let ((start-time (gensym)) (stop-time (gensym)) (retval (gensym)))
+    `(let ((,start-time (get-internal-run-time))
+           (,retval ,@body)
+           (,stop-time (get-internal-run-time)))
+       (format ,out-stream "Time spent in expression: (seconds) ~f~C"
+               (/ (- ,stop-time ,start-time) internal-time-units-per-second)
+               #\linefeed)
+       ,retval)))
+
+;(eratosthenes-sieve (parse-integer (cadr *posix-argv*)))
+(timeit *error-output* (eratosthenes-sieve 1000000))
