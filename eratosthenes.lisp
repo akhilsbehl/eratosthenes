@@ -14,15 +14,29 @@
         ((> i (length sieve)))
         (setf (bit sieve (1- i)) 1)))))
 
-(defmacro timeit (&optional (out-stream *standard-output*) &body body)
-  (let ((start-time (gensym)) (stop-time (gensym)) (retval (gensym)))
+(defmacro timeit ((&key
+                    (to-stream *standard-output*)
+                    (with-runs 1))
+                  &body body)
+  "Note that this function may barf if you are depending on a single evaluation
+  and choose with-runs to be greater than one. But I guess that will be the
+  caller's mistake instead."
+  (let ((start-time (gensym))
+        (stop-time (gensym))
+        (temp (gensym))
+        (retval (gensym)))
     `(let ((,start-time (get-internal-run-time))
-           (,retval ,@body)
+           (,retval (let ((,temp))
+                      (dotimes (i ,with-runs ,temp)
+                        (setf ,temp ,@body))))
            (,stop-time (get-internal-run-time)))
-       (format ,out-stream "Time spent in expression: (seconds) ~f~C"
-               (/ (- ,stop-time ,start-time) internal-time-units-per-second)
+       (format ,to-stream
+               "~CTime spent in expression over ~:d iterations: ~f seconds.~C"
+               #\linefeed ,with-runs
+               (/ (- ,stop-time ,start-time)
+                  internal-time-units-per-second)
                #\linefeed)
        ,retval)))
 
-(timeit *error-output*
+(timeit (:to-stream *error-output*)
         (eratosthenes-sieve (parse-integer (cadr *posix-argv*))))
